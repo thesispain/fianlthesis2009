@@ -143,11 +143,14 @@ def train_phase2():
     print("Loading Pretrained Phase 1 Model...")
     encoder = BiMambaEncoder(d_model=Config.D_MODEL)
     try:
-        w_path = f"{Config.CHECKPOINT_DIR}/epoch_10.pth"
+        w_path = f"{Config.CHECKPOINT_DIR}/epoch_1.pth"
+        print(f"DEBUG: Loading Pretrained Weights from: {os.path.abspath(w_path)}")
+        if not os.path.exists(w_path):
+             print(f"DEBUG: File does not exist at {w_path}")
         encoder.load_state_dict(torch.load(w_path, map_location=DEVICE))
         print(f"Loaded {w_path}")
-    except:
-        print("Warning: Could not load epoch_10.pth, training from scratch? No.")
+    except Exception as e:
+        print(f"Warning: Could not load epoch_10.pth, training from scratch? No. Error: {e}")
         return
 
     model = BiMambaClassifier(encoder).to(DEVICE)
@@ -229,7 +232,7 @@ def train_phase2():
     print(f"Latency:   {avg_latency:.4f} ms/flow (Batched)")
     
     # Save Model
-    save_path = "final_phase2/best_fewshot_model.pth"
+    save_path = "final_phase2/teacher_fewshot.pth"
     torch.save(model.state_dict(), save_path)
     print(f"Saved model to {save_path}")
 

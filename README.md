@@ -34,6 +34,15 @@ This project compares a robust, bidirectional **Teacher** model against a lightw
 ### 🏆 Conclusion
 The Student model successfully distills the knowledge of the Teacher, achieving **98.54% Accuracy** (comparable to Teacher) while offering massive latency reductions (**0.16 ms/flow**). This validates the Unidirectional Mamba architecture for high-speed NIDS deployments.
 
+### 3. Knowledge Distillation (Learned from Scratch)
+*Training a Randomly Initialized Student using Teacher Knowledge (No Pretraining).*
+
+| Metric | Result | Notes |
+| :--- | :--- | :--- |
+| **Accuracy** | **98.46%** | Matches Pretrained Student (-0.08%) |
+| **F1 Score** | **72.86%** | Slight drop (-2%) vs Pretrained |
+| **Conclusion** | **Success** | Teacher Knowledge (Soft Targets) is sufficient to train a Student from scratch without Unsupervised Pretraining. |
+
 ---
 
 ## 📂 Repository Structure

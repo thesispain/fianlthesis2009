@@ -14,7 +14,7 @@ class Config:
     
     # Training
     BATCH_SIZE = 128  # Full GPU Power
-    EPOCHS = 10       # Standard Pretraining Duration
+    EPOCHS = 1       # Fast Retrain for Teacher Repair
     LR = 5e-4
     
     # Loss

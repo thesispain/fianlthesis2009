@@ -195,3 +195,11 @@ This will load `pretrain_50pct_benign.pkl` and train the Bi-Mamba model to under
 *   **Weights:** `final_student/weights/`
 
 **Note:** The Student re-uses the `10 Epoch` Teacher weights for distillation experiments if needed, but for the "Pure Student" replication, it uses its own `epoch_1.pth` weights.
+
+### Phase 4: Knowledge Distillation (Learned Student)
+- **Goal:** Train Random Student using Teacher Knowledge (Distillation) instead of Pretraining.
+- **Results:**
+    - **Accuracy:** 98.46% (vs Pretrained Student 98.54%)
+    - **F1 Score:** 72.86% (vs Pretrained Student 74.88%)
+    - **AUC Score:** 96.92% (vs Pretrained Student 96.89%)
+- **Conclusion:** Distillation successfully trains the Student from scratch to nearly match the Pretrained performance, proving that the Teacher's "Soft Targets" carry sufficient information to bypass the need for Unsupervised Pretraining if a Teacher is available.

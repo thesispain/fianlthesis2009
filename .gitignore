@@ -1,0 +1,46 @@
+# --- Files to IGNORE ---
+
+# 1. Big Data (Assume Data is OUTSIDE, but if symlinked or copied)
+data/
+*.pkl
+*.csv
+*.pcap
+*.tar.gz
+
+# 2. Environments & Caches
+mamba_env/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.json
+telegram_config.json
+
+# 3. Heavy Weights (>50MB)
+*.pth
+weights/
+# Exclude specific weight folders if they are generated inside
+*/weights/
+checkpoints/
+
+# 4. Trash / Junk / Legacy
+trash/
+legacy/
+old_scripts/
+temp/
+tmp/
+
+# 5. System
+.DS_Store
+
+# --- EXCEPTIONS (Whitelist useful stuff) ---
+# Allow specific small config files or important scripts even if they are in ignored folders (if needed)
+
+# But we actually want to KEEP the folder structure, just ignore contents
+# Git doesn't track empty folders, so usually we add .gitkeep. 
+
+# For this user request: "Useful Files Only"
+# - final_phase1 (Code)
+# - final_phase2 (Code)
+# - final_student (Code)
+# - scripts/
+# - docs/ or logs/

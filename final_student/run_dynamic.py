@@ -42,7 +42,9 @@ def run():
     
     # Train Halting
     optimizer = torch.optim.AdamW(model.parameters(), lr=LR)
-    crit_cls = nn.CrossEntropyLoss()
+    # Weights from Phase 2: [0.5, 17.0]
+    weights = torch.tensor([0.5148, 17.3936]).to(DEVICE)
+    crit_cls = nn.CrossEntropyLoss(weight=weights)
     
     print("Training Halting Network...")
     for epoch in range(EPOCHS):
@@ -94,41 +96,50 @@ def run():
     
     THRESHOLD = 0.9
     
+    print(f"Evaluate finished...")
+    
+    # Needs probabilities for AUC. For dynamic, this is tricky as we might exit early.
+    # We will use the probability of Class 1 from the *exited* classifier.
+    all_probs = []
+
     with torch.no_grad():
         for x, y in test_loader:
             x, y = x.to(DEVICE), y.to(DEVICE)
             logits_seq, halt_seq = model(x)
             
-            batch_preds = []
-            
             for b in range(x.size(0)):
-                # Per sample logic simulating exit
                 exited = False
+                final_prob = 0.0
                 for t in range(logits_seq.size(1)):
                     conf = halt_seq[b, t].item()
                     if conf > THRESHOLD:
-                        batch_preds.append(torch.argmax(logits_seq[b, t]).item())
+                        all_preds.append(torch.argmax(logits_seq[b, t]).item())
+                        # Softmax on the chosen exit logits
+                        final_prob = torch.softmax(logits_seq[b, t], dim=0)[1].item()
                         exit_steps.append(t + 1)
                         exited = True
                         break
                 if not exited:
-                    batch_preds.append(torch.argmax(logits_seq[b, -1]).item())
+                    all_preds.append(torch.argmax(logits_seq[b, -1]).item())
+                    final_prob = torch.softmax(logits_seq[b, -1], dim=0)[1].item()
                     exit_steps.append(32)
+                
+                all_probs.append(final_prob)
             
-            all_preds.extend(batch_preds)
             all_labels.extend(y.cpu().numpy())
             
     end = time.time()
-    # Note: Loop above is slow Python, so latency metric will be skewed.
-    # We report 'simulated' latency based on avg steps.
-    # 1 Step ~ 0.005 ms (Standard Mamba step)
     
     avg_step = np.mean(exit_steps)
     acc = accuracy_score(all_labels, all_preds)
     f1 = f1_score(all_labels, all_preds)
+    try:
+        auc = roc_auc_score(all_labels, all_probs)
+    except:
+        auc = 0.5
     
-    print(f"🏆 Dynamic Results: Acc={acc:.4f}, F1={f1:.4f}, Avg Step={avg_step:.2f}")
-    return acc, f1, avg_step
+    print(f"🏆 Dynamic Results: Acc={acc:.4f}, F1={f1:.4f}, AUC={auc:.4f}, Avg Step={avg_step:.2f}")
+    return acc, f1, auc, avg_step
 
 if __name__ == "__main__":
     run()

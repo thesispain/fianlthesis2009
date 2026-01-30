@@ -49,27 +49,38 @@ def run():
     model.eval()
     all_preds = []
     all_labels = []
+    all_probs = []
     
     import time
     start = time.time()
+    
+    import numpy as np
     
     with torch.no_grad():
         for x, y in test_loader:
             x = x.to(DEVICE)
             logits = model(x)
             preds = torch.argmax(logits, dim=1)
+            # Probability of positive class (Attack) for AUC
+            probs = torch.softmax(logits, dim=1)[:, 1]
+            
             all_preds.extend(preds.cpu().numpy())
             all_labels.extend(y.numpy())
+            all_probs.extend(probs.cpu().numpy())
             
     end = time.time()
     latency = (end - start) / len(test_data) * 1000
     
     acc = accuracy_score(all_labels, all_preds)
     f1 = f1_score(all_labels, all_preds)
+    try:
+        auc = roc_auc_score(all_labels, all_probs)
+    except:
+        auc = 0.5
     
-    print(f"🏆 Baseline Results: Acc={acc:.4f}, F1={f1:.4f}, Latency={latency:.4f} ms")
+    print(f"🏆 Baseline Results: Acc={acc:.4f}, F1={f1:.4f}, AUC={auc:.4f}, Latency={latency:.4f} ms")
     
-    return acc, f1, latency
+    return acc, f1, auc, latency
 
 if __name__ == "__main__":
     run()

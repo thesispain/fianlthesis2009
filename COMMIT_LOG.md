@@ -10,6 +10,9 @@
 | **2026-01-30** | 15:00 | Agent | **Core** | Finalized Phase 3 (Student) Codebase: `final_student/` with pretraining and early exit logic. |
 | **2026-01-30** | 15:10 | Agent | **Refactor** | Created `Organized_Final/` directory containing only essential code for Git Push. |
 | **2026-01-30** | 15:12 | Agent | **Git** | Added `telegram_config.json` to `.gitignore` to prevent secret leakage. |
+| **2026-01-30** | 16:30 | Agent | **Exp** | Phase 4: Distilled Student (Acc: 98.46%, F1: 72.86%) completed. |
+| **2026-01-30** | 17:00 | Agent | **Feat** | Phase 5: Implemented 3 Early Exit Strategies types (Baseline, Dynamic, Learned) in `final_student/models/`. |
+| **2026-01-30** | 17:15 | Agent | **Exp** | Benchmarking Early Exit mechanisms (Baseline vs Dynamic vs Learned). |
 
 ---
 

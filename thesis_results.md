@@ -52,6 +52,13 @@ The proposed **DyM-NIDS (Dynamic Mamba Network-IDS)** successfully outperforms s
 | **Phase 3 Student (Replication)** | **98.54%** | 75.56% | 0.78% | 96.89% | 0.16 ms |
 | **Phase 4 Student (Distilled)** | 98.46% | 72.86% | - | 96.92% | 0.16 ms |
 
+### Phase 5: Early Exit Comparison (Experimental)
+| Strategy | Accuracy | Avg Steps | Notes |
+| :--- | :--- | :--- | :--- |
+| **Baseline (No Exit)** | 96.52% | 32.0 | Standard Unidirectional |
+| **Dynamic (ACT)** | 97.11% | 1.0 | Biased to Benign (No Class Weights) |
+| **Learned (2-Classifier)** | Running... | TBD | Script: `run_learned.py` |
+
 ### Key Metrics Analysis
 *   **Accuracy (97.21%):** The Student model achieved the highest overall accuracy. Notably, it beat BERT (88.73%) by a massive margin. *Why?* BERT overfitted or failed to handle the specific flow sequences, while Mamba's recurrence captured the dynamics perfectly.
 *   **Recall (99.92%):** Near-perfect detection. The model caught almost every single attack in the test set.
